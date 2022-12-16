@@ -1,8 +1,6 @@
 import Header from "../../components/layout/header/Header";
 import styled from "@emotion/styled";
-import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { getCookie } from "../../until/cookie";
 import CategoryHttp from "../../http/categoryHttp";
 import axios from "axios";
 const Container = styled.section`
@@ -18,7 +16,6 @@ const Container = styled.section`
 const categoryHttp = new CategoryHttp();
 function Category2() {
     const [Category, setCategory] = useState([]);
-
     const [state, setState] = useState("");
 
     return (

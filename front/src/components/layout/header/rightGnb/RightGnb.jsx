@@ -36,7 +36,7 @@ function RightGnb() {
         console.log(userHttp.getLogout);
         try{
             const res = await userHttp.getLogout();
-            console.log(res);
+
         }catch(err){
             console.log(err);
         }
@@ -46,9 +46,9 @@ function RightGnb() {
             isLoggedIn: false,
         }));
 
-        //나중에 서버와 통신이 가능한 URL을 사용하게 된다면 지워도 되는 코드
-        removeCookie("accesstoken");
-        removeCookie("refreshtoken");
+        // //나중에 서버와 통신이 가능한 URL을 사용하게 된다면 지워도 되는 코드
+        // removeCookie("accesstoken");
+        // removeCookie("refreshtoken");
     };
 
     return (
@@ -69,7 +69,7 @@ function RightGnb() {
                             <Link to="/myPage">마이페이지</Link>
                         </li>
                         <li>
-                            <a onClick={logout}>로그아웃</a>
+                            <Link to="/" onClick={logout}>로그아웃</Link>
                         </li>
                     </>
                 )}

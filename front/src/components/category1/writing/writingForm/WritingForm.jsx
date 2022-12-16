@@ -5,6 +5,7 @@ import styled from "@emotion/styled";
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import WriteHttp from "../../../../http/writeHttp";
+import {useSelector} from "react-redux";
 const writeHttp = new WriteHttp();
 function WritingForm() {
     //hook from 가져오기
@@ -14,7 +15,7 @@ function WritingForm() {
         watch,
         formState: { errors }
     } = useForm();
-
+    const {userId} = useSelector(state => state.persistedReducer.userReducer);
     const navigate = useNavigate();
     const [text, setText] = useState("");
     const [isError, setIsError] = useState(false);
@@ -35,7 +36,7 @@ function WritingForm() {
     }, [imagePreview]);
 
     const onSubmit = async (data) => {
-        data.user_id = 5;
+        data.user_id = userId;
         if (text.length < 5) {
             setIsError(true);
             return 0;
