@@ -8,7 +8,7 @@ class Http {
     }
     static createAxios() {
         return axios.create({
-            baseURL: process.env.REACT_APP_API_BASE_URL,
+            baseURL:"https://www.teamprojectvv.shop",
             timeout: 30 * 1000,
             withCredentials: true,
             headers: {

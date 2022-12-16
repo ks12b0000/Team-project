@@ -30,4 +30,5 @@ yarn-error.log*
 .idea/
 /front/certificate
 /front/node_modules
+/front/.env
 .idea
