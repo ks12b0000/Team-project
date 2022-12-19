@@ -49,20 +49,21 @@ function CateItem() {
                 </select>
             </SelectBox>
             <Ul>
-                {posts.length || <IsNonData text="데이터가 존재하지않습니다." />}
-                {currentPost.map((category, idx) => (
-                    <li key={idx + 1}>
-                        <Link to={`/category1/${category.board_id}`}>
-                            <Thumbnail>
-                                <img src={category.thumbnail} alt="https://pbs.twimg.com/media/Dd9n4k4VMAIiqCs?format=jpg&name=large" />
-                            </Thumbnail>
-                            <TextBox>
-                                <span>{category.title}</span>
-                                <div dangerouslySetInnerHTML={{ __html: category.text }}></div>
-                            </TextBox>
-                        </Link>
-                    </li>
-                ))}
+                {
+                    posts.length === 0 ? <IsNonData text="데이터가 존재하지않습니다." /> :
+                        currentPost.map((category, idx) => (
+                            <li key={idx + 1}>
+                                <Link to={`/category1/${category.board_id}`}>
+                                    <Thumbnail>
+                                        <img src={category.thumbnail} alt="https://pbs.twimg.com/media/Dd9n4k4VMAIiqCs?format=jpg&name=large" />
+                                    </Thumbnail>
+                                    <TextBox>
+                                        <span>{category.title}</span>
+                                        <div dangerouslySetInnerHTML={{ __html: category.text }}></div>
+                                    </TextBox>
+                                </Link>
+                            </li>
+                        ))}
             </Ul>
             <div>{showPagination()}</div>
         </>

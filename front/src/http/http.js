@@ -1,6 +1,6 @@
 import axios from "axios";
-import { getCookie } from "../until/cookie";
-const token = getCookie("accesstoken");
+// import { getCookie } from "../until/cookie";
+// const token = getCookie("accesstoken");
 class Http {
     constructor() {
         this.axios = Http.createAxios();
@@ -13,7 +13,7 @@ class Http {
             withCredentials: true,
             headers: {
                 "Access-Control-Allow-Origin": "https://www.teamprojectvv.shop",
-                Authorization: `Bearer ${token}`
+                // Authorization: `Bearer ${token}`
             }
         });
     }

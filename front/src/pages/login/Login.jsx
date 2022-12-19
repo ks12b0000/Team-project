@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router";
+import {Link} from 'react-router-dom'
 import { useDispatch } from "react-redux";
 import { loginUser } from "../../redux/reducer/userSlice";
 import styled from "@emotion/styled";
 import Header from "../../components/layout/header/Header";
 import UserHttp from "../../http/userHttp";
-import { setCookie } from "../../until/cookie";
+
 
 const userHttp = new UserHttp();
 
@@ -35,8 +36,8 @@ function Login() {
 
                 //로그인 성공 시 토큰을 쿠키에 담아줌
                 if (res.data.code === 1000) {
-                    setCookie("accesstoken", res.headers.accesstoken);
-                    setCookie("refreshtoken", res.headers.refreshtoken);
+                    // setCookie("accesstoken", res.headers.accesstoken);
+                    // setCookie("refreshtoken", res.headers.refreshtoken);
 
                     //리덕스 userReducer에 값을 넣어줌
                     dispatch(

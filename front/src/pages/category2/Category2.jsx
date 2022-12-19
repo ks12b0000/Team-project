@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
 import CategoryHttp from "../../http/categoryHttp";
 import axios from "axios";
+import {useSelector} from "react-redux";
 const Container = styled.section`
     width: 1200px;
     margin: 0 auto;

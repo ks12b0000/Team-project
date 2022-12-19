@@ -3,7 +3,8 @@ import styled from "@emotion/styled";
 import CateItem from "../../components/category1/cateItem/CateItem";
 import Buttons from "../../components/buttons/Buttons";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, Routes, Route } from "react-router-dom";
+import {  Routes, Route } from "react-router";
+import {Link} from 'react-router-dom'
 import Detail from "../../components/category1/detail/Detail";
 import Writing from "../../components/category1/writing/Writing";
 
