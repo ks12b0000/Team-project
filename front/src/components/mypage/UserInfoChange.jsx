@@ -1,10 +1,53 @@
 import styled from "@emotion/styled";
 import { useEffect } from "react";
 import { useState } from "react";
-import UserHttp from "../../http/userHttp";
+import AuthHttp from "../../http/authHttp";
+
+const authHttp = new AuthHttp();
 
 const UserInfoChange = (props) => {
-    const [IsIdChange, setIsIdChange] = useState(false);
+    //모달창 ui 변경을 위한 state
+    const [IsIdChange, setIsIdChange] = useState(true);
+    const [IsEmailChange, setIsEmailChange] = useState(false);
+    const [IsPasswordChange, setIsPasswordChange] = useState(false);
+
+    //input값을 위한 state
+    const [CurrentPassword, setCurrentPassword] = useState("");
+
+    const onIdChange = () => {
+        setIsIdChange(true);
+        setIsEmailChange(false);
+        setIsPasswordChange(false);
+    };
+
+    const onEmailChange = () => {
+        setIsEmailChange(true);
+        setIsIdChange(false);
+        setIsPasswordChange(false);
+    };
+
+    const onPasswordChange = () => {
+        setIsPasswordChange(true);
+        setIsIdChange(false);
+        setIsEmailChange(false);
+    };
+
+    const OnCheckPassword = async (e) => {
+        e.preventDefault();
+
+        const body = {
+            password: CurrentPassword
+        };
+
+        try {
+            const res = await authHttp.getCheckPassword(body);
+            // setMailText(res.data.message + " 이메일로 아이디를 확인하세요");
+            console.log(res);
+        } catch (err) {
+            console.log(err);
+            // setMailText(err.response.data.message);
+        }
+    };
 
     return (
         <>
@@ -16,17 +59,60 @@ const UserInfoChange = (props) => {
                     }}
                 />
                 <TagWrap IsIdChange={IsIdChange}>
-                    <TagName1 onClick={() => setIsIdChange(false)} IsIdChange={IsIdChange}>
+                    <TagName onClick={() => onIdChange()} IsChangeOn={IsIdChange}>
                         아이디 변경
-                    </TagName1>
-                    <TagName2 onClick={() => setIsIdChange(true)} IsIdChange={IsIdChange}>
+                    </TagName>
+                    <TagName onClick={() => onEmailChange()} IsChangeOn={IsEmailChange}>
+                        이메일 변경
+                    </TagName>
+                    <TagName onClick={() => onPasswordChange()} IsChangeOn={IsPasswordChange}>
                         비밀번호 변경
-                    </TagName2>
+                    </TagName>
                 </TagWrap>
                 {IsIdChange ? (
-                    <ContentsWrap>
-                        <SubTitle>현재 비밀번호</SubTitle>
+                    <ContentsWrap margin="70px auto 0 auto">
+                        <SubTitle marginBottom="12px">현재 비밀번호</SubTitle>
                         <InputWrap mb="30px">
+                            <Input type="password" value={CurrentPassword} onChange={(e) => setCurrentPassword(e.currentTarget.value)} />
+                            <InputButton onClick={OnCheckPassword}>확인</InputButton>
+                            {/* <MiniText>현재 비밀번호를 확인해주세요</MiniText> */}
+                        </InputWrap>
+                        <SubTitle marginBottom="12px">새 아이디</SubTitle>
+                        <InputWrap mb="30px">
+                            <Input />
+                            <InputButton>중복확인</InputButton>
+                            {/* <MiniText>아이디 중복확인을 해주세요</MiniText> */}
+                        </InputWrap>
+                        <SubmitButton>아이디 변경하기</SubmitButton>
+                    </ContentsWrap>
+                ) : (
+                    <></>
+                )}
+
+                {IsEmailChange ? (
+                    <ContentsWrap margin="70px auto 0 auto">
+                        <SubTitle marginBottom="12px">현재 비밀번호</SubTitle>
+                        <InputWrap mb="30px">
+                            <Input />
+                            <InputButton>확인</InputButton>
+                            {/* <MiniText>현재 비밀번호를 확인해주세요</MiniText> */}
+                        </InputWrap>
+                        <SubTitle marginBottom="12px">새 이메일</SubTitle>
+                        <InputWrap mb="30px">
+                            <Input />
+                            <InputButton>중복확인</InputButton>
+                            {/* <MiniText>이메일 중복확인을 해주세요</MiniText> */}
+                        </InputWrap>
+                        <SubmitButton>이메일 변경하기</SubmitButton>
+                    </ContentsWrap>
+                ) : (
+                    <></>
+                )}
+
+                {IsPasswordChange ? (
+                    <ContentsWrap margin="50px auto 0 auto">
+                        <SubTitle>현재 비밀번호</SubTitle>
+                        <InputWrap mb="20px">
                             <Input />
                             <InputButton>확인</InputButton>
                             {/* <MiniText>현재 비밀번호를 확인해주세요</MiniText> */}
@@ -36,29 +122,15 @@ const UserInfoChange = (props) => {
                             <Input />
                         </InputWrap>
                         <SubTitle>새 비밀번호 확인</SubTitle>
-                        <InputWrap mb="30px">
+                        <InputWrap mb="20px">
                             <Input />
-                            <InputButton>중복확인</InputButton>
+                            {/* <InputButton>중복확인</InputButton> */}
                             {/* <MiniText>새 비밀번호와 새 비밀번호 확인이 일치하지 않습니다.</MiniText> */}
                         </InputWrap>
-                        <SubmitButton>아이디 변경하기</SubmitButton>
+                        <SubmitButton>비밀번호 변경하기</SubmitButton>
                     </ContentsWrap>
                 ) : (
-                    <ContentsWrap>
-                        <SubTitle marginBottom="12px">현재 비밀번호</SubTitle>
-                        <InputWrap mb="40px">
-                            <Input />
-                            <InputButton>확인</InputButton>
-                            {/* <MiniText>현재 비밀번호를 확인해주세요</MiniText> */}
-                        </InputWrap>
-                        <SubTitle marginBottom="12px">새 아이디</SubTitle>
-                        <InputWrap mb="40px">
-                            <Input />
-                            <InputButton>중복확인</InputButton>
-                            {/* <MiniText>아이디 중복확인을 해주세요</MiniText> */}
-                        </InputWrap>
-                        <SubmitButton>아이디 변경하기</SubmitButton>
-                    </ContentsWrap>
+                    <></>
                 )}
             </ModalWrap>
         </>
@@ -89,39 +161,23 @@ const ModalWrap = styled.div`
 const TagWrap = styled.div`
     width: 81%;
     height: 60px;
-    margin: ${(props) => (props.IsIdChange ? "40px auto 40px auto" : "40px auto 70px auto")};
+    margin: 40px auto 0 auto;
     border-bottom: 2px solid #35c5f0;
     display: grid;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: 33% 33% 33%;
     justify-content: space-between;
 `;
 
-const TagName1 = styled.div`
+const TagName = styled.div`
     height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     font-size: 18px;
-    color: ${(props) => (props.IsIdChange ? "#919191" : "#35c5f0")};
+    color: ${(props) => (props.IsChangeOn ? "#35c5f0" : "#919191")};
     cursor: pointer;
-    background-color: ${(props) => (props.IsIdChange ? "white" : "#f6f6f6")};
-    box-sizing: border-box;
-    padding: 10px;
-    border-radius: 10px;
-    font-weight: ${(props) => (props.IsIdChange ? "500" : "600")};
-`;
-
-const TagName2 = styled.div`
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    font-size: 18px;
-    color: ${(props) => (props.IsIdChange ? "#35c5f0" : "#919191")};
-    cursor: pointer;
-    background-color: ${(props) => (props.IsIdChange ? "#f6f6f6" : "white")};
+    background-color: ${(props) => (props.IsChangeOn ? "#f5f5f5" : "white")};
     box-sizing: border-box;
     padding: 10px;
     border-radius: 10px;
@@ -144,7 +200,7 @@ const XButton = styled.div`
 const ContentsWrap = styled.div`
     width: 81%;
     height: 63%;
-    margin: 30px auto 0 auto;
+    margin: ${(props) => props.margin};
 `;
 
 const SubTitle = styled.div`
@@ -216,7 +272,7 @@ const MiniText = styled.div`
 `;
 
 const SubmitButton = styled.div`
-    width: 130px;
+    width: 140px;
     height: 40px;
     background-color: #35c5f0;
     border-radius: 10px;
@@ -226,6 +282,7 @@ const SubmitButton = styled.div`
     align-items: center;
     font-size: 15px;
     margin-left: auto;
+    margin-right: 10px;
     transition: 0.2s;
     cursor: pointer;
 
