@@ -3,10 +3,10 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
-import UserHttp from "../../http/userHttp";
+import AuthHttp from "../../http/authHttp";
 import UserInfoChange from "../../components/mypage/UserInfoChange";
 
-const userHttp = new UserHttp();
+const authHttp = new AuthHttp();
 
 const MyPage = () => {
     const params = useParams();
@@ -23,7 +23,7 @@ const MyPage = () => {
 
     const onMypage = async () => {
         try {
-            const res = await userHttp.getMypage(userId);
+            const res = await authHttp.getMypage(userId);
             setUserInfo(res.data.result);
             console.log(res);
         } catch (err) {
