@@ -2,36 +2,14 @@ import styled from "@emotion/styled";
 import { useSelector } from "react-redux";
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router";
-import AuthHttp from "../../http/authHttp";
-import UserHttp from "../../http/userHttp";
-
-const authHttp = new AuthHttp();
-const userHttp = new UserHttp();
+import IdChange from "./IdChange";
+import EmailChange from "./EmailChange";
 
 const UserInfoChange = (props) => {
-    const userId = useSelector((state) => state.persistedReducer.userReducer.userId);
-    const navigate = useNavigate();
-
-    //input UseRef 설정
-    const currentPasswordInput = useRef();
-    const idInput = useRef();
-
     //모달창 ui 변경을 위한 state
     const [IsIdChange, setIsIdChange] = useState(true);
     const [IsEmailChange, setIsEmailChange] = useState(false);
     const [IsPasswordChange, setIsPasswordChange] = useState(false);
-
-    //input값을 위한 state
-    const [CurrentPassword, setCurrentPassword] = useState("");
-    const [Username, setUsername] = useState("");
-
-    //miniText 표시를 위한 state
-    const [CurrentPasswordText, setCurrentPasswordText] = useState("");
-    const [IdText, setIdText] = useState("");
-
-    //onFunc 실행전에 체크해야할 것들(현재 비밀번호 체크여부, 아이디 중복확인 체크여부, 이메일 중복확인 체크여부, 비밀번호&비밀번호 확인 일치여부)
-    const [CheckCurrentPassword, setCheckCurrentPassword] = useState(false);
-    const [CheckUsername, setCheckUsername] = useState(false);
 
     const onIdChange = () => {
         setIsIdChange(true);
@@ -49,89 +27,6 @@ const UserInfoChange = (props) => {
         setIsPasswordChange(true);
         setIsIdChange(false);
         setIsEmailChange(false);
-    };
-
-    // 현재 비밀번호 확인 함수
-    const onCheckPassword = async (e) => {
-        e.preventDefault();
-
-        const body = {
-            password: CurrentPassword
-        };
-
-        try {
-            const res = await authHttp.postCheckPassword(userId, body);
-            console.log(res);
-            setCurrentPasswordText(res.data.message);
-            if (res.data.code === 1000) {
-                setCheckCurrentPassword(true);
-            }
-        } catch (err) {
-            console.log(err);
-            setCurrentPasswordText(err.response.data.message);
-        }
-
-        setTimeout(() => {
-            setCurrentPasswordText("");
-        }, 5000);
-    };
-
-    //아이디 중복체크 실행 함수
-    const onCheckUsername = async (e) => {
-        e.preventDefault();
-
-        try {
-            const res = await userHttp.getCheckUsername(Username);
-            console.log(res);
-            setIdText(res.data.message);
-
-            if (!res.data.result.isDuplicate) {
-                setCheckUsername(true);
-            }
-        } catch (err) {
-            console.log(err);
-            setIdText(err.response.data.message);
-        }
-
-        setTimeout(() => {
-            setIdText("");
-        }, 5000);
-    };
-
-    //아이디 변경 실행 함수
-    const onChangeUsername = async (e) => {
-        e.preventDefault();
-
-        const body = {
-            updateUsername: Username
-        };
-
-        if (!CheckCurrentPassword) {
-            currentPasswordInput.current.focus();
-            setCurrentPasswordText("비밀번호를 확인해주세요");
-
-            setTimeout(() => {
-                setCurrentPasswordText("");
-            }, 5000);
-        } else if (!CheckUsername) {
-            idInput.current.focus();
-            setIdText("아이디 중복확인을 실행해주세요");
-
-            setTimeout(() => {
-                setIdText("");
-            }, 5000);
-        } else {
-            try {
-                const res = await authHttp.putUpdateUsername(userId, body);
-                console.log(res);
-                alert("아이디 변경이 완료되었습니다. 재로그인 해주세요");
-
-                navigate("/login");
-            } catch (err) {
-                console.log(err);
-                alert(err.response.data.message);
-            }
-        }
     };
 
     return (
@@ -154,45 +49,9 @@ const UserInfoChange = (props) => {
                         비밀번호 변경
                     </TagName>
                 </TagWrap>
-                {IsIdChange ? (
-                    <ContentsWrap margin="70px auto 0 auto">
-                        <SubTitle marginBottom="12px">현재 비밀번호</SubTitle>
-                        <InputWrap mb="30px">
-                            <Input type="password" value={CurrentPassword} onChange={(e) => setCurrentPassword(e.currentTarget.value)} ref={currentPasswordInput} />
-                            <InputButton onClick={(e) => onCheckPassword(e)}>확인</InputButton>
-                            <MiniText>{CurrentPasswordText}</MiniText>
-                        </InputWrap>
-                        <SubTitle marginBottom="12px">새 아이디</SubTitle>
-                        <InputWrap mb="30px">
-                            <Input type="id" value={Username} onChange={(e) => setUsername(e.currentTarget.value)} ref={idInput} />
-                            <InputButton onClick={(e) => onCheckUsername(e)}>중복확인</InputButton>
-                            <MiniText>{IdText}</MiniText>
-                        </InputWrap>
-                        <SubmitButton onClick={(e) => onChangeUsername(e)}>아이디 변경하기</SubmitButton>
-                    </ContentsWrap>
-                ) : (
-                    <></>
-                )}
+                {IsIdChange ? <IdChange /> : <></>}
 
-                {IsEmailChange ? (
-                    <ContentsWrap margin="70px auto 0 auto">
-                        <SubTitle marginBottom="12px">현재 비밀번호</SubTitle>
-                        <InputWrap mb="30px">
-                            <Input />
-                            <InputButton>확인</InputButton>
-                            {/* <MiniText>현재 비밀번호를 확인해주세요</MiniText> */}
-                        </InputWrap>
-                        <SubTitle marginBottom="12px">새 이메일</SubTitle>
-                        <InputWrap mb="30px">
-                            <Input />
-                            <InputButton>중복확인</InputButton>
-                            {/* <MiniText>이메일 중복확인을 해주세요</MiniText> */}
-                        </InputWrap>
-                        <SubmitButton>이메일 변경하기</SubmitButton>
-                    </ContentsWrap>
-                ) : (
-                    <></>
-                )}
+                {IsEmailChange ? <EmailChange /> : <></>}
 
                 {IsPasswordChange ? (
                     <ContentsWrap margin="50px auto 0 auto">
@@ -282,13 +141,13 @@ const XButton = styled.div`
     z-index: 10;
 `;
 
-const ContentsWrap = styled.div`
+export const ContentsWrap = styled.div`
     width: 81%;
     height: 63%;
     margin: ${(props) => props.margin};
 `;
 
-const SubTitle = styled.div`
+export const SubTitle = styled.div`
     font-size: 17px;
     margin-bottom: ${(props) => props.marginBottom};
     margin-left: 20px;
@@ -296,14 +155,14 @@ const SubTitle = styled.div`
     font-weight: 500;
 `;
 
-const InputWrap = styled.div`
+export const InputWrap = styled.div`
     padding: 10px;
     height: 45px;
     position: relative;
     margin-bottom: ${(props) => props.mb};
 `;
 
-const Input = styled.input`
+export const Input = styled.input`
     width: 100%;
     height: 45px;
     border: 1.5px solid #cecece;
@@ -323,11 +182,11 @@ const Input = styled.input`
     }
 
     :focus {
-        border: 2px solid #ff7252;
+        border: 2px solid #949494;
     }
 `;
 
-const InputButton = styled.div`
+export const InputButton = styled.div`
     height: 28px;
     width: 78px;
     background-color: #d8d8d8;
@@ -352,7 +211,7 @@ const InputButton = styled.div`
     }
 `;
 
-const MiniText = styled.div`
+export const MiniText = styled.div`
     font-size: 13px;
     color: #35c5f0;
     font-weight: 600;
@@ -360,7 +219,7 @@ const MiniText = styled.div`
     margin-left: 10px;
 `;
 
-const SubmitButton = styled.div`
+export const SubmitButton = styled.div`
     width: 140px;
     height: 40px;
     background-color: #35c5f0;

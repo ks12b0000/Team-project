@@ -40,5 +40,35 @@ class AuthHttp extends Http {
             throw err;
         }
     };
+
+    //이메일 변경
+    putUpdateEmail = async (user_id, params) => {
+        try {
+            const res = await this.axios.put(`auth/user/update/email/${user_id}`, params);
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    };
+
+    //비밀번호 변경
+    putUpdatePassword = async (user_id, params) => {
+        try {
+            const res = await this.axios.put(`auth/user/update/password/${user_id}`, params);
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    };
+
+    //회원 탈퇴
+    deleteUser = async (user_id) => {
+        try {
+            const res = await this.axios.delete(`auth/user/delete/${user_id}`);
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    };
 }
 export default AuthHttp;
