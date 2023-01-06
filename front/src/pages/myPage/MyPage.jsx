@@ -1,8 +1,9 @@
 import styled from "@emotion/styled";
 import { useState } from "react";
 import { useEffect } from "react";
-import { useParams } from "react-router";
-import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router";
+import { useSelector, useDispatch } from "react-redux";
+import { logoutUser } from "../../redux/reducer/userSlice";
 import AuthHttp from "../../http/authHttp";
 import UserInfoChange from "../../components/mypage/UserInfoChange";
 
@@ -11,6 +12,10 @@ const authHttp = new AuthHttp();
 const MyPage = () => {
     const params = useParams();
     const { userId } = params;
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const isSocialLogin = useSelector((state) => state.persistedReducer.userReducer.isSocialLogin);
 
     const [UserInfo, setUserInfo] = useState([]);
@@ -18,7 +23,7 @@ const MyPage = () => {
 
     useEffect(() => {
         onMypage();
-        console.log(UserInfo);
+        console.log(userId);
     }, []);
 
     const onMypage = async () => {
@@ -28,6 +33,26 @@ const MyPage = () => {
             console.log(res);
         } catch (err) {
             console.log(err);
+        }
+    };
+
+    const onDeleteUser = async (e) => {
+        e.preventDefault();
+
+        if (window.confirm("정말 계정을 삭제하겠습니까?")) {
+            try {
+                const res = await authHttp.deleteUser(userId);
+                setUserInfo(res.data.result);
+                console.log(res);
+            } catch (err) {
+                console.log(err);
+            }
+
+            alert("계정이 삭제되었습니다");
+            dispatch(logoutUser());
+            navigate("/login");
+        } else {
+            return;
         }
     };
 
@@ -53,6 +78,7 @@ const MyPage = () => {
                             </UserLogContentsBox>
                         </UserLogContentsBlock>
                     </UserLogBlock>
+                    <UserDeleteButton onClick={(e) => onDeleteUser(e)}>회원 탈퇴</UserDeleteButton>
                     {IsModal ? <UserInfoChange setIsModal={setIsModal} /> : <></>}
                 </MypageWrap>
             ) : (
@@ -107,7 +133,7 @@ const UserInfoEmail = styled.div`
 `;
 
 const UserInfoButton = styled.div`
-    width: 180px;
+    width: 150px;
     height: 45px;
     border-radius: 30px;
     background-color: #35c5f0;
@@ -116,10 +142,15 @@ const UserInfoButton = styled.div`
     align-items: center;
     position: absolute;
     top: 60%;
-    left: 75%;
+    left: 78%;
     color: white;
     font-size: 17px;
     cursor: pointer;
+    transition: 0.2s;
+
+    &:hover {
+        background-color: #19b1e0;
+    }
 `;
 
 const UserLogBlock = styled.div`
@@ -162,6 +193,27 @@ const UserLogText = styled.div`
 
     &:hover {
         color: #35c5f0;
+    }
+`;
+
+const UserDeleteButton = styled.div`
+    width: 180px;
+    height: 45px;
+    border-radius: 10px;
+    background-color: #bdbdbd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 82%;
+    left: 66%;
+    color: white;
+    font-size: 17px;
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover {
+        background-color: #8f8f8f;
     }
 `;
 
