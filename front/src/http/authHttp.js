@@ -22,9 +22,19 @@ class AuthHttp extends Http {
     };
 
     //현재 비밀번호 확인
-    getCheckPassword = async (params) => {
+    postCheckPassword = async (user_id, params) => {
         try {
-            const res = await this.axios.get("auth/user/check/password", params);
+            const res = await this.axios.post(`auth/user/check/password/${user_id}`, params);
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    };
+
+    //아이디 변경
+    putUpdateUsername = async (user_id, params) => {
+        try {
+            const res = await this.axios.put(`auth/user/update/username/${user_id}`, params);
             return res;
         } catch (err) {
             throw err;
