@@ -9,81 +9,79 @@ const userHttp = new UserHttp();
 function SignUp() {
     const navigate = useNavigate();
 
-    const [UserName, setUserName] = useState("");
+    const [Username, setUsername] = useState("");
     const [Email, setEmail] = useState("");
     const [Password, setPassword] = useState("");
     const [CheckPassword, setCheckPassword] = useState("");
-    const [CheckUserName, setCheckUserName] = useState(false);
+    const [CheckUsername, setCheckUsername] = useState(false);
     const [CheckEmail, setCheckEmail] = useState(false);
 
     //회원가입 실행 함수
-    const onSignUp = async(e) => {
+    const onSignUp = async (e) => {
         e.preventDefault();
 
         const body = {
-            username: UserName,
+            username: Username,
             email: Email,
             password: Password
-        }
+        };
 
-        if (!(UserName && Email && Password && CheckPassword)) {
+        if (!(Username && Email && Password && CheckPassword)) {
             return alert("모든 값을 입력해주세요");
         } else if (Password != CheckPassword) {
             return alert("비밀번호와 비밀번호 확인 값이 일치하지 않습니다");
-        } else if(!CheckUserName){
-            return alert("닉네임 중복검사를 진행해 주세요")
-        } else if(!CheckEmail){
-            return alert("이메일 중복검사를 진행해 주세요")
+        } else if (!CheckUsername) {
+            return alert("닉네임 중복검사를 진행해 주세요");
+        } else if (!CheckEmail) {
+            return alert("이메일 중복검사를 진행해 주세요");
         } else {
             try {
                 const res = await userHttp.postSignUp(body);
                 console.log(res);
 
-                navigate('/login');
-            } catch(err) {
+                navigate("/login");
+            } catch (err) {
                 console.log(err);
-                // alert(err.response.data.message);
-            };
+                alert(err.response.data.message);
+            }
         }
     };
 
     //아이디 중복체크 실행 함수
-    const onCheckUserName = async(e)=>{
+    const onCheckUsername = async (e) => {
         e.preventDefault();
 
         try {
-            const res = await userHttp.getCheckUsername(UserName)
+            const res = await userHttp.getCheckUsername(Username);
             console.log(res);
 
-            if(!res.data.result.isDuplicate){
-                setCheckUserName(true)
-                alert(res.data.message)
+            if (!res.data.result.isDuplicate) {
+                setCheckUsername(true);
+                alert(res.data.message);
             }
-        } catch(err){
+        } catch (err) {
             console.log(err);
-            alert(err.response.data.message)
+            alert(err.response.data.message);
         }
-
-    }
+    };
 
     //이메일 중복체크 실행 함수
-    const onCheckEmail = async(e)=>{
+    const onCheckEmail = async (e) => {
         e.preventDefault();
 
         try {
-            const res = await userHttp.getCheckEmail(Email)
+            const res = await userHttp.getCheckEmail(Email);
             console.log(res);
 
-            if(!res.data.result.isDuplicate){
-                setCheckEmail(true)
-                alert(res.data.message)
+            if (!res.data.result.isDuplicate) {
+                setCheckEmail(true);
+                alert(res.data.message);
             }
-        } catch(err){
+        } catch (err) {
             console.log(err);
-            alert(err.response.data.message)
+            alert(err.response.data.message);
         }
-
-    }
+    };
 
     return (
         <>
@@ -94,14 +92,14 @@ function SignUp() {
                     <SignName>아이디</SignName>
                     <IdWrap>
                         <SignInput
-                            value={UserName}
+                            value={Username}
                             type="id"
                             placeholder="아이디를 입력하세요"
                             onChange={(e) => {
-                                setUserName(e.currentTarget.value);
+                                setUsername(e.currentTarget.value);
                             }}
                         />
-                        <IdButton onClick={(e)=>onCheckUserName(e)}>중복확인</IdButton>
+                        <IdButton onClick={(e) => onCheckUsername(e)}>중복확인</IdButton>
                     </IdWrap>
                     {/* 이메일 입력 */}
                     <SignName>이메일</SignName>
@@ -114,7 +112,7 @@ function SignUp() {
                                 setEmail(e.currentTarget.value);
                             }}
                         />
-                        <IdButton onClick={(e)=>onCheckEmail(e)}>중복확인</IdButton>
+                        <IdButton onClick={(e) => onCheckEmail(e)}>중복확인</IdButton>
                     </IdWrap>
                     {/* 비밀번호 입력 */}
                     <SignName>비밀번호</SignName>

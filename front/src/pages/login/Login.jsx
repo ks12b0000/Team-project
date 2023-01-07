@@ -25,7 +25,7 @@ function Login() {
     const dispatch = useDispatch();
 
     //로그인 시 필요한 유저 정보
-    const [UserName, setUserName] = useState("");
+    const [Username, setUsername] = useState("");
     const [Password, setPassword] = useState("");
     const [AutoLogin, setAutoLogin] = useState(false);
 
@@ -37,7 +37,7 @@ function Login() {
     const [EmailForFindId, setEmailForFindId] = useState("");
 
     //비밀번호 찾기를 위한 아이디 및 이메일 값
-    const [UserNameForFindPassword, setUserNameForFindPassword] = useState("");
+    const [UsernameForFindPassword, setUsernameForFindPassword] = useState("");
     const [EmailForFindPassword, setEmailForFindPassword] = useState("");
 
     //메일 발송 후 문구
@@ -48,12 +48,12 @@ function Login() {
         e.preventDefault();
 
         const body = {
-            username: UserName,
+            username: Username,
             password: Password,
             autoLogin: AutoLogin
         };
 
-        if (!(UserName && Password)) {
+        if (!(Username && Password)) {
             alert("모든 값을 채워주세요.");
         } else {
             try {
@@ -75,10 +75,11 @@ function Login() {
                 }
             } catch (err) {
                 console.log(err);
+                alert(err.response.data.message);
             }
         }
 
-        setUserName("");
+        setUsername("");
         setPassword("");
         setAutoLogin(false);
     };
@@ -112,7 +113,7 @@ function Login() {
         e.preventDefault();
 
         const body = {
-            username: UserNameForFindPassword,
+            username: UsernameForFindPassword,
             email: EmailForFindPassword
         };
 
@@ -126,7 +127,7 @@ function Login() {
         }
 
         setTimeout(() => {
-            setUserNameForFindPassword("");
+            setUsernameForFindPassword("");
             setEmailForFindPassword("");
             setMailText("");
         }, 5000);
@@ -137,7 +138,7 @@ function Login() {
             <LoginBackground>
                 <LoginWrap>
                     <LoginTitle>Welcome to our project !</LoginTitle>
-                    <LoginInput value={UserName} type="id" placeholder="id" onChange={(e) => setUserName(e.currentTarget.value)} />
+                    <LoginInput value={Username} type="id" placeholder="id" onChange={(e) => setUsername(e.currentTarget.value)} />
                     <LoginInput value={Password} type="password" placeholder="password" onChange={(e) => setPassword(e.currentTarget.value)} />
                     <CheckBoxWrap>
                         <input value={AutoLogin} type="checkbox" onChange={(e) => setAutoLogin(e.currentTarget.checked)} checked={AutoLogin} />
@@ -196,7 +197,7 @@ function Login() {
                             <XButton onClick={() => setFindPassword(false)} top="9%" />
                             <ModalContentsWrap>
                                 <ModalText>아이디를 입력해 주세요</ModalText>
-                                <ModalInput value={UserNameForFindPassword} type="id" placeholder="id" onChange={(e) => setUserNameForFindPassword(e.currentTarget.value)} mb="30px" />
+                                <ModalInput value={UsernameForFindPassword} type="id" placeholder="id" onChange={(e) => setUsernameForFindPassword(e.currentTarget.value)} mb="30px" />
                                 <ModalText>이메일 주소를 입력해 주세요</ModalText>
                                 <ModalInput value={EmailForFindPassword} type="email" placeholder="email" onChange={(e) => setEmailForFindPassword(e.currentTarget.value)} mb="40px" />
                                 <ModalMiniText top="65%">{MailText}</ModalMiniText>

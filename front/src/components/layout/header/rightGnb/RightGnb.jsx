@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { loginUser } from "../../../../redux/reducer/userSlice";
 import {mq} from '../../../media/media';
-
 import UserHttp from "../../../../http/userHttp";
 
 const GnbContainer = styled.ul`
@@ -25,7 +24,6 @@ const GnbContainer = styled.ul`
         color: #35c5f0;
       }
     }
-  }
 `;
 const MediaMenu = styled.div`
    display: none;
@@ -39,24 +37,19 @@ const userHttp = new UserHttp();
 function RightGnb() {
     const userInfo = useSelector((state) => state.persistedReducer.userReducer);
     const dispatch = useDispatch();
-    useEffect(() => {
-    }, [userInfo]);
+    useEffect(() => {}, [userInfo]);
 
-    const logout = async() => {
+    const logout = async () => {
         //서버에 요청을 하여 accesstoken과 refreshtoken을 삭제시켜줌
         //현재는 서버에서 직접 토큰을 지워줄 수 없어서 통신여부만 체크함
-        try{
+        try {
             const res = await userHttp.getLogout();
             console.log(res);
-
-        }catch(err){
+        } catch (err) {
             console.log(err);
         }
 
-        dispatch(loginUser({
-            userId: '',
-            isLoggedIn: false,
-        }));
+        dispatch(logoutUser());
 
         // //나중에 서버와 통신이 가능한 URL을 사용하게 된다면 지워도 되는 코드
         // removeCookie("accesstoken");
@@ -81,7 +74,9 @@ function RightGnb() {
                             <Link to={`/myPage/${userInfo.userId}`}>마이페이지</Link>
                         </li>
                         <li>
-                            <Link to="/" onClick={logout}>로그아웃</Link>
+                            <Link to="/" onClick={logout}>
+                                로그아웃
+                            </Link>
                         </li>
                     </>
                 )}

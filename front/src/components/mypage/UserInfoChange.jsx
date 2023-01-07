@@ -1,10 +1,33 @@
 import styled from "@emotion/styled";
-import { useEffect } from "react";
-import { useState } from "react";
-import UserHttp from "../../http/userHttp";
+import { useSelector } from "react-redux";
+import { useState, useRef } from "react";
+import { useNavigate } from "react-router";
+import IdChange from "./IdChange";
+import EmailChange from "./EmailChange";
 
 const UserInfoChange = (props) => {
-    const [IsIdChange, setIsIdChange] = useState(false);
+    //모달창 ui 변경을 위한 state
+    const [IsIdChange, setIsIdChange] = useState(true);
+    const [IsEmailChange, setIsEmailChange] = useState(false);
+    const [IsPasswordChange, setIsPasswordChange] = useState(false);
+
+    const onIdChange = () => {
+        setIsIdChange(true);
+        setIsEmailChange(false);
+        setIsPasswordChange(false);
+    };
+
+    const onEmailChange = () => {
+        setIsEmailChange(true);
+        setIsIdChange(false);
+        setIsPasswordChange(false);
+    };
+
+    const onPasswordChange = () => {
+        setIsPasswordChange(true);
+        setIsIdChange(false);
+        setIsEmailChange(false);
+    };
 
     return (
         <>
@@ -16,17 +39,24 @@ const UserInfoChange = (props) => {
                     }}
                 />
                 <TagWrap IsIdChange={IsIdChange}>
-                    <TagName1 onClick={() => setIsIdChange(false)} IsIdChange={IsIdChange}>
+                    <TagName onClick={() => onIdChange()} IsChangeOn={IsIdChange}>
                         아이디 변경
-                    </TagName1>
-                    <TagName2 onClick={() => setIsIdChange(true)} IsIdChange={IsIdChange}>
+                    </TagName>
+                    <TagName onClick={() => onEmailChange()} IsChangeOn={IsEmailChange}>
+                        이메일 변경
+                    </TagName>
+                    <TagName onClick={() => onPasswordChange()} IsChangeOn={IsPasswordChange}>
                         비밀번호 변경
-                    </TagName2>
+                    </TagName>
                 </TagWrap>
-                {IsIdChange ? (
-                    <ContentsWrap>
+                {IsIdChange ? <IdChange /> : <></>}
+
+                {IsEmailChange ? <EmailChange /> : <></>}
+
+                {IsPasswordChange ? (
+                    <ContentsWrap margin="50px auto 0 auto">
                         <SubTitle>현재 비밀번호</SubTitle>
-                        <InputWrap mb="30px">
+                        <InputWrap mb="20px">
                             <Input />
                             <InputButton>확인</InputButton>
                             {/* <MiniText>현재 비밀번호를 확인해주세요</MiniText> */}
@@ -36,29 +66,15 @@ const UserInfoChange = (props) => {
                             <Input />
                         </InputWrap>
                         <SubTitle>새 비밀번호 확인</SubTitle>
-                        <InputWrap mb="30px">
+                        <InputWrap mb="20px">
                             <Input />
-                            <InputButton>중복확인</InputButton>
+                            {/* <InputButton>중복확인</InputButton> */}
                             {/* <MiniText>새 비밀번호와 새 비밀번호 확인이 일치하지 않습니다.</MiniText> */}
                         </InputWrap>
-                        <SubmitButton>아이디 변경하기</SubmitButton>
+                        <SubmitButton>비밀번호 변경하기</SubmitButton>
                     </ContentsWrap>
                 ) : (
-                    <ContentsWrap>
-                        <SubTitle marginBottom="12px">현재 비밀번호</SubTitle>
-                        <InputWrap mb="40px">
-                            <Input />
-                            <InputButton>확인</InputButton>
-                            {/* <MiniText>현재 비밀번호를 확인해주세요</MiniText> */}
-                        </InputWrap>
-                        <SubTitle marginBottom="12px">새 아이디</SubTitle>
-                        <InputWrap mb="40px">
-                            <Input />
-                            <InputButton>중복확인</InputButton>
-                            {/* <MiniText>아이디 중복확인을 해주세요</MiniText> */}
-                        </InputWrap>
-                        <SubmitButton>아이디 변경하기</SubmitButton>
-                    </ContentsWrap>
+                    <></>
                 )}
             </ModalWrap>
         </>
@@ -89,39 +105,23 @@ const ModalWrap = styled.div`
 const TagWrap = styled.div`
     width: 81%;
     height: 60px;
-    margin: ${(props) => (props.IsIdChange ? "40px auto 40px auto" : "40px auto 70px auto")};
+    margin: 40px auto 0 auto;
     border-bottom: 2px solid #35c5f0;
     display: grid;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: 33% 33% 33%;
     justify-content: space-between;
 `;
 
-const TagName1 = styled.div`
+const TagName = styled.div`
     height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     font-size: 18px;
-    color: ${(props) => (props.IsIdChange ? "#919191" : "#35c5f0")};
+    color: ${(props) => (props.IsChangeOn ? "#35c5f0" : "#919191")};
     cursor: pointer;
-    background-color: ${(props) => (props.IsIdChange ? "white" : "#f6f6f6")};
-    box-sizing: border-box;
-    padding: 10px;
-    border-radius: 10px;
-    font-weight: ${(props) => (props.IsIdChange ? "500" : "600")};
-`;
-
-const TagName2 = styled.div`
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    font-size: 18px;
-    color: ${(props) => (props.IsIdChange ? "#35c5f0" : "#919191")};
-    cursor: pointer;
-    background-color: ${(props) => (props.IsIdChange ? "#f6f6f6" : "white")};
+    background-color: ${(props) => (props.IsChangeOn ? "#f5f5f5" : "white")};
     box-sizing: border-box;
     padding: 10px;
     border-radius: 10px;
@@ -141,13 +141,13 @@ const XButton = styled.div`
     z-index: 10;
 `;
 
-const ContentsWrap = styled.div`
+export const ContentsWrap = styled.div`
     width: 81%;
     height: 63%;
-    margin: 30px auto 0 auto;
+    margin: ${(props) => props.margin};
 `;
 
-const SubTitle = styled.div`
+export const SubTitle = styled.div`
     font-size: 17px;
     margin-bottom: ${(props) => props.marginBottom};
     margin-left: 20px;
@@ -155,14 +155,14 @@ const SubTitle = styled.div`
     font-weight: 500;
 `;
 
-const InputWrap = styled.div`
+export const InputWrap = styled.div`
     padding: 10px;
     height: 45px;
     position: relative;
     margin-bottom: ${(props) => props.mb};
 `;
 
-const Input = styled.input`
+export const Input = styled.input`
     width: 100%;
     height: 45px;
     border: 1.5px solid #cecece;
@@ -180,9 +180,13 @@ const Input = styled.input`
         letter-spacing: 2px;
         color: #aaaaaa;
     }
+
+    :focus {
+        border: 2px solid #949494;
+    }
 `;
 
-const InputButton = styled.div`
+export const InputButton = styled.div`
     height: 28px;
     width: 78px;
     background-color: #d8d8d8;
@@ -207,7 +211,7 @@ const InputButton = styled.div`
     }
 `;
 
-const MiniText = styled.div`
+export const MiniText = styled.div`
     font-size: 13px;
     color: #35c5f0;
     font-weight: 600;
@@ -215,8 +219,8 @@ const MiniText = styled.div`
     margin-left: 10px;
 `;
 
-const SubmitButton = styled.div`
-    width: 130px;
+export const SubmitButton = styled.div`
+    width: 140px;
     height: 40px;
     background-color: #35c5f0;
     border-radius: 10px;
@@ -226,6 +230,7 @@ const SubmitButton = styled.div`
     align-items: center;
     font-size: 15px;
     margin-left: auto;
+    margin-right: 10px;
     transition: 0.2s;
     cursor: pointer;
 
