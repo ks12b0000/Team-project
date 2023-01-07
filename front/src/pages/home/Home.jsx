@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import Header from "../../components/layout/header/Header";
 import Main from "../../components/layout/main/Main";
 import AuthHttp from "../../http/authHttp";
-
 const authHttp = new AuthHttp();
 
 function Home() {
@@ -20,6 +19,7 @@ function Home() {
             console.log(err);
         }
     };
+
 
     return (
         <>
