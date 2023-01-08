@@ -6,6 +6,7 @@ import styled from "@emotion/styled";
 import { useDispatch, useSelector } from "react-redux";
 import WriteHttp from "../../../http/writeHttp";
 import IsNonData from "../../isNonData/IsNonData";
+import CommentUpload from "../../comment/CommentUpload";
 
 
 
@@ -18,6 +19,7 @@ function Detail() {
         (async () => {
            try {
                const res = await writeHttp.getDetailPost(id);
+               console.log(res.result);
                setDetailPost(res.result);
 
            } catch (err){
@@ -29,10 +31,8 @@ function Detail() {
 
     return (
         <>
-            <Header />
             <Container>
                 <Top>
-
                         <TopImg>
                             <img src={detailPost.thumbnail} alt=""/>
                         </TopImg>
@@ -41,8 +41,8 @@ function Detail() {
                               <Text dangerouslySetInnerHTML={{ __html: detailPost.text }}></Text>
                               <LikeButton >좋아요</LikeButton>
                         </TopText>
-
                 </Top>
+                <CommentUpload boardId = {id} />
             </Container>
         </>
     );
@@ -51,7 +51,7 @@ export default Detail;
 
 
 const Container = styled.article`
-    width: 1200px;
+    width: 1100px;
     margin: 100px auto 0;
 `;
 const Top = styled.div`

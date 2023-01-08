@@ -2,8 +2,8 @@ import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { loginUser } from "../../../../redux/reducer/userSlice";
-import {mq} from '../../../media/media';
+import { logoutUser } from "../../../../redux/reducer/userSlice";
+import { mq } from "../../../media/media";
 import UserHttp from "../../../../http/userHttp";
 
 const GnbContainer = styled.ul`
@@ -15,8 +15,7 @@ const GnbContainer = styled.ul`
   ${mq[0]} {
     display: none;
   }
-  li {
-    
+
     a {
       font-weight: 500;
       font-size: 16px !important;
@@ -24,13 +23,14 @@ const GnbContainer = styled.ul`
         color: #35c5f0;
       }
     }
+
 `;
 const MediaMenu = styled.div`
-   display: none;
-   ${mq[0]}{
-     display: block;
-   }
-`
+    display: none;
+    ${mq[0]} {
+        display: block;
+    }
+`;
 
 const userHttp = new UserHttp();
 
@@ -80,7 +80,6 @@ function RightGnb() {
                         </li>
                     </>
                 )}
-
             </GnbContainer>
             <MediaMenu>햄버거</MediaMenu>
         </>
