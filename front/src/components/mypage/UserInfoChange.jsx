@@ -174,6 +174,7 @@ export const Input = styled.input`
     padding-left: 20px;
     box-sizing: border-box;
     color: #545454;
+    
     ::placeholder {
         font-size: 16px;
         font-weight: 300;
